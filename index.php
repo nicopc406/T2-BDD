@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['edit'])) {
     $conn = getConnection();
     $id = intval($_GET['edit']);
-    $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
+    $stmt = $conn->prepare("SELECT id, name, email, created_at FROM users WHERE id=?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
