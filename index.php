@@ -14,31 +14,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = trim($_POST['name']);
         $email = trim($_POST['email']);
         
-        if (isset($_POST['id']) && !empty($_POST['id'])) {
-            // Update existing user
-            $id = intval($_POST['id']);
-            $stmt = $conn->prepare("UPDATE users SET name=?, email=? WHERE id=?");
-            $stmt->bind_param("ssi", $name, $email, $id);
-            
-            if ($stmt->execute()) {
-                $message = "User updated successfully!";
-            } else {
-                error_log("Error updating user: " . $stmt->error);
-                $message = "Error updating user. Please try again.";
-            }
-            $stmt->close();
+        // Validate input
+        if (empty($name) || empty($email)) {
+            $message = "Name and email are required.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = "Invalid email format.";
         } else {
-            // Create new user
-            $stmt = $conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-            $stmt->bind_param("ss", $name, $email);
-            
-            if ($stmt->execute()) {
-                $message = "New user created successfully!";
+            if (isset($_POST['id']) && !empty($_POST['id'])) {
+                // Update existing user
+                $id = intval($_POST['id']);
+                $stmt = $conn->prepare("UPDATE users SET name=?, email=? WHERE id=?");
+                $stmt->bind_param("ssi", $name, $email, $id);
+                
+                if ($stmt->execute()) {
+                    $message = "User updated successfully!";
+                } else {
+                    error_log("Error updating user: " . $stmt->error);
+                    $message = "Error updating user. Please try again.";
+                }
+                $stmt->close();
             } else {
-                error_log("Error creating user: " . $stmt->error);
-                $message = "Error creating user. Please try again.";
+                // Create new user
+                $stmt = $conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
+                $stmt->bind_param("ss", $name, $email);
+                
+                if ($stmt->execute()) {
+                    $message = "New user created successfully!";
+                } else {
+                    error_log("Error creating user: " . $stmt->error);
+                    $message = "Error creating user. Please try again.";
+                }
+                $stmt->close();
             }
-            $stmt->close();
         }
     }
     
@@ -78,7 +85,9 @@ if (isset($_GET['edit'])) {
 
 // Fetch all users
 $conn = getConnection();
-$result = $conn->query("SELECT * FROM users ORDER BY id DESC");
+$stmt = $conn->prepare("SELECT * FROM users ORDER BY id DESC");
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -294,5 +303,6 @@ $result = $conn->query("SELECT * FROM users ORDER BY id DESC");
 </body>
 </html>
 <?php
+$stmt->close();
 $conn->close();
 ?>
