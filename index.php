@@ -11,38 +11,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Create or Update user
     if (isset($_POST['action']) && $_POST['action'] === 'save') {
-        $name = $conn->real_escape_string($_POST['name']);
-        $email = $conn->real_escape_string($_POST['email']);
+        $name = trim($_POST['name']);
+        $email = trim($_POST['email']);
         
         if (isset($_POST['id']) && !empty($_POST['id'])) {
             // Update existing user
             $id = intval($_POST['id']);
-            $sql = "UPDATE users SET name='$name', email='$email' WHERE id=$id";
-            if ($conn->query($sql) === TRUE) {
+            $stmt = $conn->prepare("UPDATE users SET name=?, email=? WHERE id=?");
+            $stmt->bind_param("ssi", $name, $email, $id);
+            
+            if ($stmt->execute()) {
                 $message = "User updated successfully!";
             } else {
-                $message = "Error updating user: " . $conn->error;
+                error_log("Error updating user: " . $stmt->error);
+                $message = "Error updating user. Please try again.";
             }
+            $stmt->close();
         } else {
             // Create new user
-            $sql = "INSERT INTO users (name, email) VALUES ('$name', '$email')";
-            if ($conn->query($sql) === TRUE) {
+            $stmt = $conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
+            $stmt->bind_param("ss", $name, $email);
+            
+            if ($stmt->execute()) {
                 $message = "New user created successfully!";
             } else {
-                $message = "Error: " . $sql . "<br>" . $conn->error;
+                error_log("Error creating user: " . $stmt->error);
+                $message = "Error creating user. Please try again.";
             }
+            $stmt->close();
         }
     }
     
     // Delete user
     if (isset($_POST['action']) && $_POST['action'] === 'delete') {
         $id = intval($_POST['id']);
-        $sql = "DELETE FROM users WHERE id=$id";
-        if ($conn->query($sql) === TRUE) {
+        $stmt = $conn->prepare("DELETE FROM users WHERE id=?");
+        $stmt->bind_param("i", $id);
+        
+        if ($stmt->execute()) {
             $message = "User deleted successfully!";
         } else {
-            $message = "Error deleting user: " . $conn->error;
+            error_log("Error deleting user: " . $stmt->error);
+            $message = "Error deleting user. Please try again.";
         }
+        $stmt->close();
     }
     
     $conn->close();
@@ -52,8 +64,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['edit'])) {
     $conn = getConnection();
     $id = intval($_GET['edit']);
-    $result = $conn->query("SELECT * FROM users WHERE id=$id");
-    $edit_user = $result->fetch_assoc();
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $edit_user = $result->fetch_assoc();
+    }
+    $stmt->close();
     $conn->close();
 }
 
@@ -258,7 +277,7 @@ $result = $conn->query("SELECT * FROM users ORDER BY id DESC");
                     <td><?php echo $row['id']; ?></td>
                     <td><?php echo htmlspecialchars($row['name']); ?></td>
                     <td><?php echo htmlspecialchars($row['email']); ?></td>
-                    <td><?php echo $row['created_at']; ?></td>
+                    <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                     <td class="actions">
                         <a href="?edit=<?php echo $row['id']; ?>" class="btn btn-primary">Edit</a>
                         <form method="POST" action="" onsubmit="return confirm('Are you sure you want to delete this user?');">
