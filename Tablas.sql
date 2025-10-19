@@ -1,5 +1,5 @@
 -- Tablas
-
+--prueba de commit
 CREATE TABLE Usuarios(
     rut_usuario VARCHAR(10) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -25,7 +25,6 @@ CREATE TABLE Especialidades(
     FOREIGN KEY (rut_ingeniero) REFERENCES Usuarios(rut_usuario),
     FOREIGN KEY (id_topico) REFERENCES Topicos(id_topico)
 );
-
 CREATE TABLE Solicitudes(
 	id_solicitud INT PRIMARY KEY AUTO_INCREMENT,
     tipo ENUM('Funcionalidad', 'Error') NOT NULL,
