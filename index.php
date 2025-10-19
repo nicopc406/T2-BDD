@@ -85,7 +85,7 @@ if (isset($_GET['edit'])) {
 
 // Fetch all users
 $conn = getConnection();
-$stmt = $conn->prepare("SELECT * FROM users ORDER BY id DESC");
+$stmt = $conn->prepare("SELECT id, name, email, created_at FROM users ORDER BY id DESC");
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
