@@ -75,9 +75,9 @@ CREATE TABLE Asignaciones(
 
 
 
+-- Vistas, Funciones, Procedimientos y Triggers
 
--- VIEW
---
+
 CREATE VIEW V_Solicitudes_Funcionalidad_Detalle AS
 SELECT
     s.id_solicitud,
@@ -93,15 +93,9 @@ JOIN Usuarios u ON s.rut_usuario = u.rut_usuario
 JOIN Topicos t ON s.id_topico = t.id_topico
 JOIN Solicitudes_Funcionalidades sf ON s.id_solicitud = sf.id_funcion;
 
--- Cómo usarla en PHP:
--- $sql = "SELECT * FROM V_Solicitudes_Funcionalidad_Detalle WHERE estado = 'Abierto'";
 
 
---
--- 2. FUNCIÓN (FUNCTION)
---
--- Propósito: Una función que cuenta cuántas solicitudes tiene asignadas un ingeniero.
---
+
 DELIMITER //
 CREATE FUNCTION F_Contar_Asignaciones_Ingeniero(
     p_rut_ingeniero VARCHAR(10)
@@ -120,17 +114,9 @@ BEGIN
 END //
 DELIMITER ;
 
--- Cómo usarla en PHP:
--- $sql = "SELECT F_Contar_Asignaciones_Ingeniero('11111111-1') AS total";
 
 
---
--- 3. PROCEDIMIENTO ALMACENADO (STORED PROCEDURE)
---
--- Propósito: Un procedimiento para crear una nueva solicitud de tipo 'Error'.
--- Esto es útil porque inserta en dos tablas ('Solicitudes' y 'Solicitudes_Errores')
--- y la tarea pide un CRUD.
---
+
 DELIMITER //
 CREATE PROCEDURE SP_Crear_Solicitud_Error(
     IN p_rut_usuario VARCHAR(10),
@@ -154,20 +140,10 @@ BEGIN
 END //
 DELIMITER ;
 
--- Cómo usarlo en PHP:
--- $sql = "CALL SP_Crear_Solicitud_Error(?, ?, ?, ?)";
--- $stmt = $conexion->prepare($sql);
--- $stmt->bind_param('ssis', $rut_usr, $titulo, $id_topico, $descripcion);
--- $stmt->execute();
 
 
---
--- 4. DISPARADOR (TRIGGER)
---
--- Propósito: Implementar la "Asignación automática de solicitudes".
--- Este trigger se dispara DESPUÉS de insertar una nueva solicitud.
--- Intenta encontrar un ingeniero con la especialidad de la solicitud y se la asigna.
---
+
+
 DELIMITER //
 CREATE TRIGGER TR_Asignacion_Automatica
 AFTER INSERT ON Solicitudes
@@ -190,8 +166,3 @@ BEGIN
 END //
 DELIMITER ;
 
--- Cómo usarlo en PHP:
--- ¡No se llama! Se ejecuta automáticamente cuando haces esto:
--- $sql = "INSERT INTO Solicitudes (tipo, titulo, ...) VALUES ('Funcionalidad', ...)";
--- $conexion->query($sql);
--- (O cuando llamas al Stored Procedure de arriba)
