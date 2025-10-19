@@ -142,3 +142,17 @@ BEGIN
         SET MESSAGE_TEXT = 'Error, el titulo de la solicitud debe tener un minimo de 20 caracteres.';
     END IF;
 END
+
+-- Inserts:
+
+INSERT INTO Topicos (Categoria) VALUES
+('Desarrollo de API'),
+('Bases de Datos'),
+('Frontend Web'),
+('Backend Web'),
+('Desarrollo Móvil Android'),
+('Desarrollo Móvil iOS'),
+('DevOps'),
+('Seguridad Informática'),
+('Inteligencia Artificial'),
+('Machine Learning');
