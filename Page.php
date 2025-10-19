@@ -1,21 +1,13 @@
 <?php
-// Fichero: /var/www/html/zeropressure/index.php
 
-// Iniciar la sesión es lo primero. Siempre.
 session_start();
 
-// --- El Guardián ---
-// Verificamos si la variable de sesión 'rut_usuario' NO está definida.
-// Si no existe, significa que el usuario no ha iniciado sesión.
-if (!isset($_SESSION['rut_usuario'])) {
-    // Lo redirigimos a la página de login.
+if (!isset($_SESSION['rut_usuario'])){
+
     header('Location: Login.php');
-    // Detenemos la ejecución del script para que no se muestre nada más.
     exit();
 }
 
-// Si el script continúa, significa que el usuario sí está logueado.
-// Recogemos sus datos de la sesión para usarlos en la página.
 $nombre_usuario = $_SESSION['nombre_usuario'];
 $rol_usuario = $_SESSION['rol'];
 
@@ -26,17 +18,17 @@ $rol_usuario = $_SESSION['rol'];
     <meta charset="UTF-8">
     <title>Panel Principal - ZeroPressure</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
-        .navbar { background-color: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        .navbar a { color: white; text-decoration: none; padding: 0.5rem 1rem; }
-        .navbar a:hover { background-color: #555; border-radius: 4px; }
-        .container { padding: 2rem; max-width: 960px; margin: auto; }
-        .welcome-box { background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; }
-        h1 { color: #333; }
-        .menu { margin-top: 2rem; list-style: none; padding: 0; }
-        .menu li { background-color: #007bff; margin-bottom: 1rem; border-radius: 4px; }
-        .menu li a { display: block; padding: 1rem; color: white; text-decoration: none; }
-        .menu li a:hover { background-color: #0056b3; }
+        body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0;}
+        .navbar {background-color: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;}
+        .navbar a {color: white; text-decoration: none; padding: 0.5rem 1rem;}
+        .navbar a:hover {background-color: #555; border-radius: 4px;}
+        .container {padding: 2rem; max-width: 960px; margin: auto;}
+        .welcome-box {background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center;}
+        h1 {color: #333;}
+        .menu {margin-top: 2rem; list-style: none; padding: 0;}
+        .menu li {background-color: #007bff; margin-bottom: 1rem; border-radius: 4px;}
+        .menu li a {display: block; padding: 1rem; color: white; text-decoration: none;}
+        .menu li a:hover {background-color: #0056b3;}
     </style>
 </head>
 <body>

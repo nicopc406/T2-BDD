@@ -9,14 +9,14 @@ try {
 
     $conexion = new mysqli($db_host, $db_usuario, $db_contrasena, $db_nombre);
 
-    if ($conexion->connect_error) {
+    if ($conexion->connect_error){
 
         die("Error de conexion: " . $conexion->connect_error);
     }
 
 }
 
-catch (Exception $e) {
+catch (Exception $e){
 
     die("Error inesperado de conexion: " . $e->getMessage());
 }
