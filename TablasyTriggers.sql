@@ -157,7 +157,7 @@ INSERT INTO Topicos (Categoria) VALUES
 ('Inteligencia Artificial'),
 ('Machine Learning');
 
-
+--Join
 
 CREATE VIEW Vista_Solicitudes AS
 SELECT
@@ -179,8 +179,7 @@ JOIN Topicos t ON s.id_topico = t.id_topico
 LEFT JOIN Solicitudes_Funcionalidades sf ON s.id_solicitud = sf.id_funcion
 LEFT JOIN Solicitudes_Errores se ON s.id_solicitud = se.id_error;
 
-
-
+-- Nico Sabe
 
 DELIMITER //
 CREATE PROCEDURE SP_Crear_Solicitud_Error(
@@ -218,7 +217,7 @@ BEGIN
 END$$
 DELIMITER ;
 
-
+-- Nico Sabe 2: Ahora es personal
 
 DELIMITER //
 CREATE TRIGGER TR_Asignacion_Automatica
