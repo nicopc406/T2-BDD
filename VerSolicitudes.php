@@ -20,7 +20,7 @@ require_once 'Conexion.php';
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $titulo_pagina; ?> - ZeroPressure</title>
+    <title><?php echo htmlspecialchars($titulo_pagina); ?> - ZeroPressure</title>
     <style>
         body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0;}
         .navbar {background-color: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;}
@@ -48,81 +48,46 @@ require_once 'Conexion.php';
 
 <div class="container">
     <div class="table-container">
-        <h1><?php echo $titulo_pagina; ?></h1>
+        <h1><?php echo htmlspecialchars($titulo_pagina); ?></h1>
 
-        <?php if ($tipo_solicitud === 'Funcionalidad'): ?>
-            <?php
-            $sql = "SELECT id_solicitud, titulo, estado, topico FROM Vista_Solicitudes WHERE tipo = 'Funcionalidad' AND rut_usuario = ? ORDER BY fecha DESC";
-            $stmt = $conexion->prepare($sql);
-            $stmt->bind_param('s', $rut_usuario_actual);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            ?>
-            <table>
-                <thead>
-                <tr>
-                    <th>Título</th> <th>Tópico</th> <th>Estado</th> <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if ($resultado && $resultado->num_rows > 0): ?>
-                    <?php while($fila = $resultado->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($fila['titulo']); ?></td>
-                            <td><?php echo htmlspecialchars($fila['topico']); ?></td>
-                            <td><?php echo htmlspecialchars($fila['estado']); ?></td>
-                            <td class="actions">
-                                <?php if ($fila['estado'] !== 'En Progreso'): ?>
-                                    <a href="#">Editar</a>
-                                    <a href="eliminar_solicitud.php?id=<?php echo $fila['id_solicitud']; ?>" class="delete" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
-                                <?php else: ?>
-                                    <span>Bloqueado</span>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr><td colspan="4" style="text-align: center;">No has creado solicitudes de funcionalidad.</td></tr>
-                <?php endif; ?>
-                </tbody>
-            </table>
-        <?php elseif ($tipo_solicitud === 'Error'): ?>
-            <?php
-            $sql = "SELECT id_solicitud, titulo, estado, topico FROM Vista_Solicitudes WHERE tipo = 'Error' AND rut_usuario = ? ORDER BY fecha DESC";
-            $stmt = $conexion->prepare($sql);
-            $stmt->bind_param('s', $rut_usuario_actual);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            ?>
-            <table>
-                <thead>
-                <tr>
-                    <th>Título</th> <th>Tópico</th> <th>Estado</th> <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if ($resultado && $resultado->num_rows > 0): ?>
-                    <?php while($fila = $resultado->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($fila['titulo']); ?></td>
-                            <td><?php echo htmlspecialchars($fila['topico']); ?></td>
-                            <td><?php echo htmlspecialchars($fila['estado']); ?></td>
-                            <td class="actions">
-                                <?php if ($fila['estado'] !== 'En Progreso'): ?>
-                                    <a href="#">Editar</a>
-                                    <a href="eliminar_solicitud.php?id=<?php echo $fila['id_solicitud']; ?>" class="delete" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
-                                <?php else: ?>
-                                    <span>Bloqueado</span>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr><td colspan="4" style="text-align: center;">No has creado solicitudes de error.</td></tr>
-                <?php endif; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
+        <?php
+        $sql = "SELECT id_solicitud, titulo, estado, topico FROM Vista_Solicitudes WHERE tipo = ? AND rut_usuario = ? ORDER BY fecha DESC";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param('ss', $tipo_solicitud, $rut_usuario_actual);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        ?>
+        <table>
+            <thead>
+            <tr>
+                <th>Título</th>
+                <th>Tópico</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if ($resultado && $resultado->num_rows > 0): ?>
+                <?php while($fila = $resultado->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($fila['titulo']); ?></td>
+                        <td><?php echo htmlspecialchars($fila['topico']); ?></td>
+                        <td><?php echo htmlspecialchars($fila['estado']); ?></td>
+                        <td class="actions">
+                            <?php if ($fila['estado'] !== 'En Progreso'): ?>
+                                <a href="#">Editar</a>
+                                <a href="Eliminar.php?id=<?php echo $fila['id_solicitud']; ?>&tipo=<?php echo urlencode($tipo_solicitud); ?>" class="delete" onclick="return confirm('¿Estás seguro de que quieres eliminar esta solicitud?');">Eliminar</a>
+                            <?php else: ?>
+                                <span>Bloqueado</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr><td colspan="4" style="text-align: center;">No has creado solicitudes de este tipo.</td></tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
