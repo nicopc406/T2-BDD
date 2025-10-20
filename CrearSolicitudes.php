@@ -17,17 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $rut_usuario = $_SESSION['rut_usuario'];
     $conexion->begin_transaction();
 
-    try {
-
-        $sql_solicitud = "INSERT INTO Solicitudes (tipo, titulo, id_topico, rut_usuario) VALUES (?, ?, ?, ?)";
-        $stmt = $conexion->prepare($sql_solicitud);
-        $stmt->bind_param('ssis', $tipo, $titulo, $id_topico, $rut_usuario);
-        $stmt->execute();
-        $id_solicitud_nueva = $conexion->insert_id;
-        $stmt->close();
-
+   try {
         if ($tipo === 'Funcionalidad'){
+            // Lógica para Funcionalidad (se queda casi igual)
+            // 1. Insertar en la tabla 'padre'
+            $sql_solicitud = "INSERT INTO Solicitudes (tipo, titulo, id_topico, rut_usuario) VALUES (?, ?, ?, ?)";
+            $stmt = $conexion->prepare($sql_solicitud);
+            $stmt->bind_param('ssis', $tipo, $titulo, $id_topico, $rut_usuario);
+            $stmt->execute();
+            $id_solicitud_nueva = $conexion->insert_id;
+            $stmt->close();
 
+            // 2. Insertar en la tabla 'hija'
             $ambiente = $_POST['ambiente'];
             $resumen = $_POST['resumen'];
             $sql_funcionalidad = "INSERT INTO Solicitudes_Funcionalidades (id_funcion, ambiente, resumen) VALUES (?, ?, ?)";
@@ -35,26 +36,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $stmt_f->bind_param('iss', $id_solicitud_nueva, $ambiente, $resumen);
             $stmt_f->execute();
             $stmt_f->close();
-        }
-
-        elseif ($tipo === 'Error'){
-
+        
+        } elseif ($tipo === 'Error'){
+            
+            // --- ESTA ES LA CORRECCIÓN ---
+            // Ya no hacemos el INSERT manual. Llamamos al Procedimiento Almacenado.
             $descripcion = $_POST['descripcion'];
-            $sql_error = "INSERT INTO Solicitudes_Errores (id_error, descripcion) VALUES (?, ?)";
-            $stmt_e = $conexion->prepare($sql_error);
-            $stmt_e->bind_param('is', $id_solicitud_nueva, $descripcion);
+            
+            // 1. Preparamos la llamada al SP
+            $sql_error_sp = "CALL SP_Crear_Solicitud_Error(?, ?, ?, ?)";
+            $stmt_e = $conexion->prepare($sql_error_sp);
+            
+            // 2. Vinculamos los parámetros (rut_usuario, titulo, id_topico, descripcion)
+            $stmt_e->bind_param('ssis', $rut_usuario, $titulo, $id_topico, $descripcion);
+            
+            // 3. Ejecutamos
             $stmt_e->execute();
             $stmt_e->close();
+            // --- FIN DE LA CORRECCIÓN ---
         }
 
+        // Si todo salió bien, confirmamos la transacción
         $conexion->commit();
-        $mensaje = "Solicitud creada con exito!";
+        $mensaje = "Solicitud creada con éxito!";
     }
-
     catch (Exception $e){
-
+        // Si algo falló, revertimos
         $conexion->rollback();
-        $mensaje = "Error al crear la solicitud: " . $e->getMessage();
+
+        // (Mejora) Manejamos el error específico del trigger Titulo20min
+        // que definiste en TablasyTriggers.txt
+        if ($e->getCode() == 1644) { // Código de error para SIGNAL SQLSTATE '45000'
+             $mensaje = "Error: " . $e->getMessage();
+        } else {
+             $mensaje = "Error al crear la solicitud: " . $e->getMessage();
+        }
     }
 }
 
