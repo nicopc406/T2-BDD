@@ -47,19 +47,27 @@ $rol_usuario = $_SESSION['rol'];
     <div class="welcome-box">
         <h1>Bienvenido a tu Panel de Control</h1>
         <p>Desde aquí puedes gestionar tus solicitudes y reportes.</p>
-    </div>
 
+        <form action="Busqueda.php" method="GET" style="margin-top: 1.5rem; display: flex; gap: 10px;">
+            <input type="text" name="termino" placeholder="Buscar solicitud por título..." required style="flex-grow: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;">
+            <button type="submit" style="padding: 0.75rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Buscar</button>
+        </form>
+
+        <a href="BusquedaPlus.php" style="display: inline-block; margin-top: 1rem; color: #007bff;">
+            Ir a la Búsqueda Avanzada
+        </a>
+    </div>
     <ul class="menu">
         <?php if ($rol_usuario === 'ingeniero'): ?>
-            <li><a href="ver_solicitudes.php?tipo=funcionalidad">Ver Todas las Solicitudes de Funcionalidad</a></li>
-            <li><a href="ver_solicitudes.php?tipo=error">Ver Todas las Solicitudes de Error</a></li>
-            <li><a href="mis_asignaciones.php">Ver Mis Solicitudes Asignadas</a></li>
-        <?php else: ?>
-            <li><a href="mis_solicitudes.php?tipo=funcionalidad">Ver Mis Solicitudes de Funcionalidad</a></li>
-            <li><a href="mis_solicitudes.php?tipo=error">Ver Mis Solicitudes de Error</a></li>
+            <li><a href="VerSolicitudesAll.php?tipo=Funcionalidad">Ver Todas las Solicitudes de Funcionalidad</a></li>
+            <li><a href="VerSolicitudesAll.php?tipo=Error">Ver Todas las Solicitudes de Error</a></li>
+            <li><a href="VerAsignaciones.php">Ver Mis Solicitudes Asignadas</a></li>
+        <?php else: // Si es usuario normal ?>
+            <li><a href="VerSolicitudes.php?tipo=Funcionalidad">Ver Mis Solicitudes de Funcionalidad</a></li>
+            <li><a href="VerSolicitudes.php?tipo=Error">Ver Mis Solicitudes de Error</a></li>
         <?php endif; ?>
 
-        <li><a href="crear_solicitud.php">Crear una Nueva Solicitud</a></li>
+        <li><a href="CrearSolicitudes.php">Crear una Nueva Solicitud</a></li>
     </ul>
 </div>
 
