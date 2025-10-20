@@ -217,3 +217,27 @@ BEGIN
     RETURN total;
 END$$
 DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER TR_Asignacion_Automatica
+AFTER INSERT ON Solicitudes
+FOR EACH ROW
+BEGIN
+    DECLARE v_ingeniero_disponible VARCHAR(10);
+
+    -- 1. Buscamos un ingeniero que tenga la especialidad (id_topico) de la nueva solicitud.
+    --    (Esta es una lógica simple, asigna al primero que encuentra)
+    SELECT rut_ingeniero INTO v_ingeniero_disponible
+    FROM Especialidades
+    WHERE id_topico = NEW.id_topico
+    LIMIT 1;
+
+    -- 2. Si se encontró un ingeniero disponible, se crea la asignación.
+    IF v_ingeniero_disponible IS NOT NULL THEN
+        INSERT INTO Asignaciones (id_asignacion, rut_ingeniero)
+        VALUES (NEW.id_solicitud, v_ingeniero_disponible);
+    END IF;
+END //
+DELIMITER ;
