@@ -75,7 +75,7 @@ require_once 'Conexion.php';
                         <td><?php echo htmlspecialchars($fila['estado']); ?></td>
                         <td class="actions">
                             <?php if ($fila['estado'] !== 'En Progreso'): ?>
-                                <a href="#">Editar</a>
+                                <a href="EditarSolicitud.php?id=<?php echo $fila['id_solicitud']; ?>&tipo=<?php echo urlencode($tipo_solicitud); ?>">Editar</a>
                                 <a href="Eliminar.php?id=<?php echo $fila['id_solicitud']; ?>&tipo=<?php echo urlencode($tipo_solicitud); ?>" class="delete" onclick="return confirm('¿Estás seguro de que quieres eliminar esta solicitud?');">Eliminar</a>
                             <?php else: ?>
                                 <span>Bloqueado</span>

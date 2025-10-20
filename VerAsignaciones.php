@@ -88,7 +88,7 @@ $resultado = $stmt->get_result();
                         <td><?php echo htmlspecialchars($fila['nombre_solicitante']); ?></td>
                         <td><?php echo htmlspecialchars($fila['nombre_topico']); ?></td>
                         <td class="actions">
-                            <a href="#">Gestionar</a>
+                            <a href="GestionarSolicitud.php?id=<?php echo $fila['id_solicitud']; ?>">Gestionar</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>

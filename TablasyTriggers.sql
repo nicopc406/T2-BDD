@@ -74,6 +74,19 @@ CREATE TABLE Asignaciones(
     FOREIGN KEY (rut_ingeniero) REFERENCES Ingenieros(rut_ingeniero) ON DELETE CASCADE
 );
 
+
+
+CREATE TABLE Resenas (
+    id_resena INT PRIMARY KEY AUTO_INCREMENT,
+    id_solicitud INT NOT NULL,
+    rut_ingeniero VARCHAR(10) NOT NULL,
+    observacion TEXT NOT NULL,
+    fecha_resena DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (id_solicitud) REFERENCES Solicitudes(id_solicitud) ON DELETE CASCADE,
+    FOREIGN KEY (rut_ingeniero) REFERENCES Ingenieros(rut_ingeniero) ON DELETE CASCADE
+);
+
 -- Triggers:
 
 Nombre: Max20
