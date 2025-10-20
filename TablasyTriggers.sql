@@ -178,3 +178,29 @@ JOIN Usuarios u ON s.rut_usuario = u.rut_usuario
 JOIN Topicos t ON s.id_topico = t.id_topico
 LEFT JOIN Solicitudes_Funcionalidades sf ON s.id_solicitud = sf.id_funcion
 LEFT JOIN Solicitudes_Errores se ON s.id_solicitud = se.id_error;
+
+
+
+
+DELIMITER //
+CREATE PROCEDURE SP_Crear_Solicitud_Error(
+    IN p_rut_usuario VARCHAR(10),
+    IN p_titulo VARCHAR(200),
+    IN p_id_topico INT,
+    IN p_descripcion VARCHAR(200)
+)
+BEGIN
+    DECLARE nueva_id_solicitud INT;
+
+    -- 1. Insertar en la tabla 'padre' Solicitudes
+    INSERT INTO Solicitudes (tipo, titulo, id_topico, rut_usuario)
+    VALUES ('Error', p_titulo, p_id_topico, p_rut_usuario);
+
+    -- 2. Obtener el ID auto-incremental que se acaba de crear
+    SET nueva_id_solicitud = LAST_INSERT_ID();
+
+    -- 3. Insertar en la tabla 'hija' Solicitudes_Errores
+    INSERT INTO Solicitudes_Errores (id_error, descripcion)
+    VALUES (nueva_id_solicitud, p_descripcion);
+END //
+DELIMITER ;
