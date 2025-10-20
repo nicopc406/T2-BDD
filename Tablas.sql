@@ -77,7 +77,7 @@ CREATE TABLE Asignaciones(
 
 -- Vistas
 
-CREATE VIEW V_Solicitudes_Funcionalidad_Detalle AS
+CREATE VIEW VistaSolicitudesDetalladas AS
 SELECT
     s.id_solicitud,
     s.titulo,
