@@ -1,16 +1,25 @@
 <?php
-
 session_start();
 
 if (!isset($_SESSION['rut_usuario'])){
-
     header('Location: Login.php');
     exit();
 }
 
 $nombre_usuario = $_SESSION['nombre_usuario'];
 $rol_usuario = $_SESSION['rol'];
+$total_ingenieros = 0;
 
+// Si el usuario es un ingeniero, conectamos a la BD para llamar a la función
+if ($rol_usuario === 'ingeniero') {
+    require_once 'Conexion.php';
+    // Llamamos a la función SQL para obtener el total de ingenieros
+    $resultado_conteo = $conexion->query("SELECT ContarIngenieros() AS total");
+    if ($resultado_conteo) {
+        $total_ingenieros = $resultado_conteo->fetch_assoc()['total'];
+    }
+    $conexion->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,6 +57,12 @@ $rol_usuario = $_SESSION['rol'];
         <h1>Bienvenido a tu Panel de Control</h1>
         <p>Desde aquí puedes gestionar tus solicitudes y reportes.</p>
 
+        <?php if ($rol_usuario === 'ingeniero'): ?>
+            <p style="margin-top: 1rem; color: #555; border-top: 1px solid #eee; padding-top: 1rem;">
+                <strong>Dato del sistema:</strong> Actualmente hay <?php echo $total_ingenieros; ?> ingenieros registrados.
+            </p>
+        <?php endif; ?>
+
         <form action="Busqueda.php" method="GET" style="margin-top: 1.5rem; display: flex; gap: 10px;">
             <input type="text" name="termino" placeholder="Buscar solicitud por título..." required style="flex-grow: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;">
             <button type="submit" style="padding: 0.75rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Buscar</button>
@@ -57,6 +72,7 @@ $rol_usuario = $_SESSION['rol'];
             Ir a la Búsqueda Avanzada
         </a>
     </div>
+
     <ul class="menu">
         <?php if ($rol_usuario === 'ingeniero'): ?>
             <li><a href="VerSolicitudesAll.php?tipo=Funcionalidad">Ver Todas las Solicitudes de Funcionalidad</a></li>
