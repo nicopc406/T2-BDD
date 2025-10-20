@@ -1,5 +1,6 @@
 -- Tablas
 
+
 CREATE TABLE Usuarios(
     rut_usuario VARCHAR(10) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
