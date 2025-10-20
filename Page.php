@@ -48,18 +48,17 @@ $rol_usuario = $_SESSION['rol'];
         <h1>Bienvenido a tu Panel de Control</h1>
         <p>Desde aquí puedes gestionar tus solicitudes y reportes.</p>
     </div>
-
     <ul class="menu">
         <?php if ($rol_usuario === 'ingeniero'): ?>
-            <li><a href="ver_solicitudes.php?tipo=funcionalidad">Ver Todas las Solicitudes de Funcionalidad</a></li>
-            <li><a href="ver_solicitudes.php?tipo=error">Ver Todas las Solicitudes de Error</a></li>
-            <li><a href="mis_asignaciones.php">Ver Mis Solicitudes Asignadas</a></li>
-        <?php else: ?>
-            <li><a href="mis_solicitudes.php?tipo=funcionalidad">Ver Mis Solicitudes de Funcionalidad</a></li>
-            <li><a href="mis_solicitudes.php?tipo=error">Ver Mis Solicitudes de Error</a></li>
+            <li><a href="VerSolicitudesAll.php?tipo=Funcionalidad">Ver Todas las Solicitudes de Funcionalidad</a></li>
+            <li><a href="VerSolicitudesAll.php?tipo=Error">Ver Todas las Solicitudes de Error</a></li>
+            <li><a href="VerAsignaciones.php">Ver Mis Solicitudes Asignadas</a></li>
+        <?php else: // Si es usuario normal ?>
+            <li><a href="VerSolicitudes.php?tipo=Funcionalidad">Ver Mis Solicitudes de Funcionalidad</a></li>
+            <li><a href="VerSolicitudes.php?tipo=Error">Ver Mis Solicitudes de Error</a></li>
         <?php endif; ?>
 
-        <li><a href="crear_solicitud.php">Crear una Nueva Solicitud</a></li>
+        <li><a href="CrearSolicitudes.php">Crear una Nueva Solicitud</a></li>
     </ul>
 </div>
 
