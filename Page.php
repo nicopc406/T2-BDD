@@ -47,6 +47,15 @@ $rol_usuario = $_SESSION['rol'];
     <div class="welcome-box">
         <h1>Bienvenido a tu Panel de Control</h1>
         <p>Desde aquí puedes gestionar tus solicitudes y reportes.</p>
+
+        <form action="Busqueda.php" method="GET" style="margin-top: 1.5rem; display: flex; gap: 10px;">
+            <input type="text" name="termino" placeholder="Buscar solicitud por título..." required style="flex-grow: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;">
+            <button type="submit" style="padding: 0.75rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Buscar</button>
+        </form>
+
+        <a href="BusquedaPlus.php" style="display: inline-block; margin-top: 1rem; color: #007bff;">
+            Ir a la Búsqueda Avanzada
+        </a>
     </div>
     <ul class="menu">
         <?php if ($rol_usuario === 'ingeniero'): ?>
