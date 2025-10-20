@@ -204,3 +204,16 @@ BEGIN
     VALUES (nueva_id_solicitud, p_descripcion);
 END //
 DELIMITER ;
+
+-- Funcion
+
+DELIMITER $$
+CREATE FUNCTION `ContarIngenieros`() 
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total FROM Ingenieros;
+    RETURN total;
+END$$
+DELIMITER ;
