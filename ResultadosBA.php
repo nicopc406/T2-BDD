@@ -9,7 +9,7 @@ require_once 'Conexion.php';
 // Base de la consulta
 // COALESCE es una función que devuelve el primer valor no nulo de la lista.
 // La usamos para mostrar el resumen o la descripción en una sola columna.
-$sql = "SELECT titulo, topico, COALESCE(resumen, descripcion) AS detalle FROM VistaSolicitudesDetalladas WHERE 1=1";
+$sql = "SELECT titulo, topico, COALESCE(resumen, descripcion) AS detalle FROM Vista_Solicitudes WHERE 1=1";
 
 $params = [];
 $types = '';

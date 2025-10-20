@@ -159,3 +159,22 @@ INSERT INTO Topicos (Categoria) VALUES
 
 
 
+CREATE VIEW Vista_Solicitudes AS
+SELECT
+    s.id_solicitud,
+    s.tipo,
+    s.titulo,
+    s.id_topico,
+    s.rut_usuario,
+    s.estado,
+    s.fecha,
+    u.nombre AS solicitante,
+    t.categoria AS topico,
+    sf.ambiente,
+    sf.resumen,
+    se.descripcion
+FROM Solicitudes s
+JOIN Usuarios u ON s.rut_usuario = u.rut_usuario
+JOIN Topicos t ON s.id_topico = t.id_topico
+LEFT JOIN Solicitudes_Funcionalidades sf ON s.id_solicitud = sf.id_funcion
+LEFT JOIN Solicitudes_Errores se ON s.id_solicitud = se.id_error;
