@@ -21,5 +21,5 @@ catch (Exception $e){
     die("Error inesperado de conexion: " . $e->getMessage());
 }
 
-//echo "Conexion exitosa";
+
 ?>

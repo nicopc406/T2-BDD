@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Redirigir si no es ingeniero o no ha iniciado sesión
+
 if (!isset($_SESSION['rut_usuario']) || $_SESSION['rol'] !== 'ingeniero') {
     header('Location: Page.php');
     exit();

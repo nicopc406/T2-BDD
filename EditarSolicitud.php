@@ -2,7 +2,7 @@
 session_start();
 require_once 'Conexion.php';
 
-// Guardián: si no hay sesión, ID o tipo, redirigimos
+
 if (!isset($_SESSION['rut_usuario']) || !isset($_GET['id']) || !isset($_GET['tipo'])) {
     header('Location: Page.php');
     exit();

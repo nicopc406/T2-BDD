@@ -5,7 +5,7 @@ if (!isset($_SESSION['rut_usuario'])) {
     exit();
 }
 
-// Validar el tipo de solicitud desde la URL
+
 if (!isset($_GET['tipo']) || !in_array($_GET['tipo'], ['Funcionalidad', 'Error'])) {
     die("Tipo de solicitud no válido.");
 }

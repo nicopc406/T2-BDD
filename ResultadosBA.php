@@ -6,15 +6,13 @@ if (!isset($_SESSION['rut_usuario'])) {
 }
 require_once 'Conexion.php';
 
-// Base de la consulta
-// COALESCE es una función que devuelve el primer valor no nulo de la lista.
-// La usamos para mostrar el resumen o la descripción en una sola columna.
+
 $sql = "SELECT titulo, topico, COALESCE(resumen, descripcion) AS detalle FROM Vista_Solicitudes WHERE 1=1";
 
 $params = [];
 $types = '';
 
-// Añadir filtros dinámicamente
+
 if (!empty($_GET['fecha'])) {
     $sql .= " AND fecha = ?";
     $params[] = $_GET['fecha'];
@@ -38,7 +36,7 @@ if (!empty($_GET['estado'])) {
 
 $stmt = $conexion->prepare($sql);
 if (!empty($params)) {
-    // El operador '...' (splat) expande el array de parámetros
+    
     $stmt->bind_param($types, ...$params);
 }
 $stmt->execute();

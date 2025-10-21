@@ -10,10 +10,10 @@ $nombre_usuario = $_SESSION['nombre_usuario'];
 $rol_usuario = $_SESSION['rol'];
 $total_ingenieros = 0;
 
-// Si el usuario es un ingeniero, conectamos a la BD para llamar a la función
+
 if ($rol_usuario === 'ingeniero') {
     require_once 'Conexion.php';
-    // Llamamos a la función SQL para obtener el total de ingenieros
+    
     $resultado_conteo = $conexion->query("SELECT ContarIngenieros() AS total");
     if ($resultado_conteo) {
         $total_ingenieros = $resultado_conteo->fetch_assoc()['total'];
@@ -78,7 +78,7 @@ if ($rol_usuario === 'ingeniero') {
             <li><a href="VerSolicitudesAll.php?tipo=Funcionalidad">Ver Todas las Solicitudes de Funcionalidad</a></li>
             <li><a href="VerSolicitudesAll.php?tipo=Error">Ver Todas las Solicitudes de Error</a></li>
             <li><a href="VerAsignaciones.php">Ver Mis Solicitudes Asignadas</a></li>
-        <?php else: // Si es usuario normal ?>
+        <?php else:  ?>
             <li><a href="VerSolicitudes.php?tipo=Funcionalidad">Ver Mis Solicitudes de Funcionalidad</a></li>
             <li><a href="VerSolicitudes.php?tipo=Error">Ver Mis Solicitudes de Error</a></li>
         <?php endif; ?>
