@@ -6,10 +6,10 @@ if (!isset($_SESSION['rut_usuario'])) {
 }
 require_once 'Conexion.php';
 
-// Obtener los tópicos para el menú desplegable
+
 $topicos = $conexion->query("SELECT id_topico, categoria FROM Topicos ORDER BY categoria ASC")->fetch_all(MYSQLI_ASSOC);
 
-// Definir los posibles estados y ambientes
+
 $estados = ['Abierto', 'En Progreso', 'Resuelto', 'Cerrado'];
 $ambientes = ['Web', 'Movil'];
 ?>

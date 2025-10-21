@@ -7,15 +7,15 @@ if (!isset($_SESSION['rut_usuario'])) {
 
 require_once 'Conexion.php';
 
-// Inicializamos la variable de resultados
+
 $resultados = [];
 $termino_busqueda = '';
 
-// Verificamos si se está realizando una búsqueda simple
+
 if (isset($_GET['termino']) && !empty($_GET['termino'])) {
     $termino_busqueda = $_GET['termino'];
 
-    // El '%' es un comodín que significa "cualquier cadena de caracteres"
+
     $termino_like = '%' . $termino_busqueda . '%';
 
     // Usamos la vista para obtener toda la información necesaria
