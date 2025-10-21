@@ -46,6 +46,14 @@ Esto te redigira a Login.php donde podras iniciar sesion con uno de los usuarios
 
 La base de datos utiliza los siguientes elementos:
 
+* View: Vista_Solicitudes
+
+* Procedimiento almacenado: SP_Crear_Solicitud_Error
+
+* Triggers: Max20, Max2, Min3, Titulo20min, TR_Asignacion_Automatica
+
+* Función SQL: ContarIngenieros
+
 
 ---------------------
 
