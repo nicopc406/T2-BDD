@@ -2,90 +2,87 @@
 
 require_once 'Conexion.php';
 
-// Función para validar el RUT chileno
-function validarRut($rut){
-    $rut = strtoupper(str_replace(['.', '-'], '', $rut));
-    if (!preg_match('/^[0-9]{7,8}[0-9K]$/', $rut)){
-        return false;
-    }
-    $cuerpo = substr($rut, 0, -1);
-    $dv = substr($rut, -1);
-    $suma = 0;
-    $multiplo = 2;
-    for ($i = strlen($cuerpo) - 1; $i >= 0; $i--){
-        $suma += $cuerpo[$i] * $multiplo;
-        $multiplo = $multiplo == 7 ? 2 : $multiplo + 1;
-    }
-    $dv_esperado = 11 - ($suma % 11);
-    $dv_esperado = ($dv_esperado == 11) ? '0' : (($dv_esperado == 10) ? 'K' : (string)$dv_esperado);
-    return ($dv == $dv_esperado);
-}
-
-// Obtener los tópicos para el formulario de registro de ingenieros
 $topicos = [];
 $resultado_topicos = $conexion->query("SELECT id_topico, categoria FROM Topicos ORDER BY categoria ASC");
 if ($resultado_topicos) {
     $topicos = $resultado_topicos->fetch_all(MYSQLI_ASSOC);
 }
 
-// Procesar el formulario cuando se envía
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $rut = $_POST['rut'];
+
+    $rut = strtoupper($_POST['rut']);
+
     $nombre = $_POST['nombre'];
     $email = $_POST['email'];
     $rol = $_POST['rol'];
     $contrasena = $_POST['contrasena'];
     $confirmar_contrasena = $_POST['confirmar_contrasena'];
 
-    if (!validarRut($rut)){
-        $mensaje = "Error: el RUT ingresado no es válido.";
-    } elseif ($contrasena !== $confirmar_contrasena){
+    if (!preg_match('/^[0-9]{8}-[1-9K]$/', $rut)){
+
+        $mensaje = "Error, el RUT debe tener el formato xxxxxxxx-y (ej: 12345678-K).";
+    }
+
+    elseif ($contrasena !== $confirmar_contrasena){
+
         $mensaje = "Error al confirmar la contraseña, por favor intente nuevamente.";
-    } else {
+    }
+
+    else{
+
         $conexion->begin_transaction();
+
         try {
-            // Insertar en la tabla principal de Usuarios
+
             $sql_usuario = "INSERT INTO Usuarios (rut_usuario, nombre, email, contrasena) VALUES (?, ?, ?, ?)";
             $stmt_usuario = $conexion->prepare($sql_usuario);
-            // NOTA: Recuerda que guardar contraseñas en texto plano no es seguro.
-            // Para un proyecto real, deberías usar password_hash() aquí.
             $stmt_usuario->bind_param('ssss', $rut, $nombre, $email, $contrasena);
             $stmt_usuario->execute();
             $stmt_usuario->close();
 
-            // Si el rol es ingeniero, realizar las inserciones adicionales
             if ($rol === 'ingeniero') {
-                // 1. Insertar en la tabla Ingenieros
+
                 $sql_ingeniero = "INSERT INTO Ingenieros (rut_ingeniero) VALUES (?)";
                 $stmt_ingeniero = $conexion->prepare($sql_ingeniero);
                 $stmt_ingeniero->bind_param('s', $rut);
                 $stmt_ingeniero->execute();
                 $stmt_ingeniero->close();
 
-                // 2. Insertar las especialidades seleccionadas
-                if (isset($_POST['especialidades']) && is_array($_POST['especialidades'])) {
+                if (isset($_POST['especialidades']) && is_array($_POST['especialidades'])){
                     $sql_especialidad = "INSERT INTO Especialidades (rut_ingeniero, id_topico) VALUES (?, ?)";
                     $stmt_esp = $conexion->prepare($sql_especialidad);
-                    foreach ($_POST['especialidades'] as $id_topico) {
+
+                    foreach ($_POST['especialidades'] as $id_topico){
+
                         $stmt_esp->bind_param('si', $rut, $id_topico);
                         $stmt_esp->execute();
                     }
+
                     $stmt_esp->close();
                 }
             }
 
             $conexion->commit();
-            $mensaje = "¡Registro exitoso!";
-        } catch (Exception $e) {
+            $mensaje = "Registro exitoso!";
+        }
+
+        catch (Exception $e){
+
             $conexion->rollback();
-            if ($e->getCode() == 1062) { // Error de clave duplicada
-                $mensaje = "Error: El RUT o el correo electrónico ya están registrados.";
-            } else {
+
+            if ($e->getCode() == 1062) {
+
+                $mensaje = "Error, el RUT o el correo electronico ya estan registrados.";
+            }
+
+            else{
+
                 $mensaje = "Error en el registro: " . $e->getMessage();
             }
         }
     }
 }
+
 $conexion->close();
 ?>
 
@@ -125,7 +122,7 @@ $conexion->close();
 
     <form action="Inicio.php" method="POST">
         <div class="form-group">
-            <label for="rut">RUT:</label>
+            <label for="rut">RUT (Ej: 12345678-9):</label>
             <input type="text" id="rut" name="rut" required>
         </div>
         <div class="form-group">
