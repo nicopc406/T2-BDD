@@ -18,7 +18,7 @@ if (isset($_GET['termino']) && !empty($_GET['termino'])) {
 
     $termino_like = '%' . $termino_busqueda . '%';
 
-    // Usamos la vista para obtener toda la información necesaria
+    
     $sql = "SELECT titulo, tipo, topico, solicitante, estado 
             FROM Vista_Solicitudes 
             WHERE titulo LIKE ?";
