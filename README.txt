@@ -21,13 +21,13 @@ Para ejecutar bien la Base de Datos y los .php tienen que:
 * Abre el archivo TablasyTriggers.sql
 * Manualmente copia y pega el achivo en la seccion SQL de phpMyAdmin
 
-Eso automaticamente crea toda la Base de Datos y tambien realiza los inserts correspondientes
+Eso automáticamente crea toda la Base de Datos y también realiza los INSERT correspondientes
 
 2.  Archivos .php:
 
 * Copia la carpeta principal del proyecto en el directorio /var/www/html/"Nombre de la carpeta de destino"
 
-Una vez hecho eso los .php estaran listos para arrancar la pagina Web
+Una vez hecho eso los .php estarán listos para arrancar la pagina Web
 
 3.  Servidor:
     
@@ -39,7 +39,7 @@ Una vez hecho eso los .php estaran listos para arrancar la pagina Web
     
     http://localhost/"Nombre de la carpeta donde guardaste los datos"/Page.php
 
-Esto te redigira a Login.php donde podras iniciar sesion con uno de los usuarios creados en el ISERT o crear un nuevo usuario
+Esto te redirigirá a Login.php donde podrás iniciar sesión con uno de los usuarios creados en el ISERT o crear un nuevo usuario
 -----------------------------------
 
 - 3. Elementos SQL Implementados:
@@ -54,10 +54,9 @@ La base de datos utiliza los siguientes elementos:
 
 * Función SQL: ContarIngenieros
 
-
 ---------------------
 
 - 4. Supuestos:
 
-* Durante la ejecucion de la revision se asume que se utilizo Linux Ubuntu para ejecutar todo el proceso, tambien asumimos que se siguieron los pasos correctamente y que se utilizan casos estandar para la insercion de datos y/o trabajo en la pagina
+* Durante la ejecución de la revisión se asume que se utilizo Linux Ubuntu para ejecutar todo el proceso, también asumimos que se siguieron los pasos correctamente y que se utilizan casos estándar para la inserción de datos y/o trabajo en la pagina
 
